@@ -4,6 +4,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import os,glob
+from PyQt5 import QtGui
+
 
 def getDatas():
     dates=[]
@@ -55,12 +57,19 @@ class StatPage(QWidget):
         self.corcan = FigureCanvas(self.corfig)
         self.corcan.draw()
 
+        font = QtGui.QFont()
+        font.setFamily("맑은 고딕")
+        font.setPointSize(12)
+        font.setBold(True)
+
         self.grid.addWidget(self.avgcan, 0, 0)
         self.grid.addWidget(self.corcan, 1, 0)
         if len(avgs)>0:
-            self.l.setText("평균 분당 타수 : "+str(sum(avgs)//len(avgs))+"\n평균 정확도 : "+str(sum(cors)//len(cors)))
+            self.l.setText("평균 분당 타수 : "+str(sum(avgs)//len(avgs))+"\n평균 정확도 : "+str(sum(cors)//len(cors))+"%")
+        self.l.setFont(font)
         self.l.setAlignment(Qt.AlignTop)
         self.l.setAlignment(Qt.AlignVCenter)
+        self.l.setStyleSheet("color : #ffffff")
         self.l.setFixedWidth(200)
         self.avgcan.show()
 
