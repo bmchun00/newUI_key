@@ -7,6 +7,7 @@ from TextPage import TextPage
 from StatPage import StatPage
 from getText import getLyrics
 import random
+import re
 
 
 QSSDialog = '''
@@ -101,12 +102,21 @@ def writeTxt(at, wrong):
     tf.write(str(time.strftime('%Y%m%d%H%M',time.localtime(time.time())))+" "+str(at)+" "+str(wrong)+"\n")
 
 def getAt(cor, time, wrong):
+    base, cho, jung = 44032,588,28
     cnt = 0
     cl = list(cor)
     while cl:
         tmp = cl.pop(0)
-        if '가'<=tmp<='힣':
-            cnt+=2.6 #수정 필요(불확실성)
+        if re.match('.*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*',tmp) is not None:
+            char_code = ord(tmp) -base
+            char1 = int(char_code/cho)
+            char2 = int((char_code-cho*char1)/jung)
+            char3 = int((char_code-cho*char1-jung*char2))
+            cnt+=1
+            if char2 != 0:
+                cnt+=1
+            if char3 != 0:
+                cnt+=1
         else:
             cnt+=1
     return cnt/time*60*wrong/100
@@ -352,6 +362,7 @@ class Ui_MainWindow(QMainWindow):
                 tab.atList.append(at)
                 tab.TPM.setText("분당 타수 : "+str(int(at)))
                 if tab.progressNum == tab.maxNum + 1:
+                    print(tab.atList, tab.wrongList)
                     cb = QCheckBox("결과를 기록할래요")
                     tab.Text.setText('')
                     res = QMessageBox()
@@ -362,6 +373,8 @@ class Ui_MainWindow(QMainWindow):
                     self.stackWidget.setCurrentIndex(0)
                     if cb.checkState():
                         writeTxt(int(sum(tab.atList)/len(tab.atList)), int(sum(tab.wrongList)/len(tab.wrongList)))
+                        tab.atList = []
+                        tab.wrongList = []
                 else:
                     tab.Text.setText(tab.toList[tab.progressNum-1])
 
