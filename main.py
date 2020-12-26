@@ -362,7 +362,6 @@ class Ui_MainWindow(QMainWindow):
                 tab.atList.append(at)
                 tab.TPM.setText("분당 타수 : "+str(int(at)))
                 if tab.progressNum == tab.maxNum + 1:
-                    print(tab.atList, tab.wrongList)
                     cb = QCheckBox("결과를 기록할래요")
                     tab.Text.setText('')
                     res = QMessageBox()
@@ -373,8 +372,8 @@ class Ui_MainWindow(QMainWindow):
                     self.stackWidget.setCurrentIndex(0)
                     if cb.checkState():
                         writeTxt(int(sum(tab.atList)/len(tab.atList)), int(sum(tab.wrongList)/len(tab.wrongList)))
-                        tab.atList = []
-                        tab.wrongList = []
+                    tab.atList = []
+                    tab.wrongList = []
                 else:
                     tab.Text.setText(tab.toList[tab.progressNum-1])
 

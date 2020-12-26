@@ -37,24 +37,34 @@ class StatPage(QWidget):
         dates, avgs, cors = getDatas()
         self.setLayout(self.grid)
         self.avgsplot = self.avgfig.add_subplot(111)
-        self.avgsplot.tick_params(direction = 'in')
+        self.avgsplot.tick_params(direction = 'in',colors='white')
+
         self.x = list(map(str,range(1,len(avgs)+1)))
-        self.avgsplot.plot(self.x,avgs,color='r',label='Words per minutes')
-        self.avgsplot.plot(self.x,avgs,'go',markersize=2,color='black',label='_nolegend_')
+        self.avgsplot.plot(self.x,avgs,color='r',label='Words per minutes',linestyle=':')
+        self.avgsplot.plot(self.x,avgs,'go',markersize=2,color='w',label='_nolegend_')
         self.avgsplot.legend()
         self.avgsplot.set_facecolor('none')
         self.avgfig.set_facecolor('none')
         self.avgcan = FigureCanvas(self.avgfig)
+        self.thickness = 3
+        for child in self.avgsplot.get_children():
+            if isinstance(child, matplotlib.spines.Spine):
+                child.set_color('#ffffff')
+
         self.avgcan.draw()
 
         self.corsplot = self.corfig.add_subplot(111)
-        self.corsplot.tick_params(direction='in')
-        self.corsplot.plot(self.x,cors,color='b',label='Accuracy')
-        self.corsplot.plot(self.x,cors,'go',markersize=2,color='black',label='_nolegend_')
+        self.corsplot.tick_params(direction='in',colors='white')
+        self.corsplot.plot(self.x,cors,color='b',label='Accuracy',linestyle=':')
+        self.corsplot.plot(self.x,cors,'go',markersize=2,color='w',label='_nolegend_')
         self.corsplot.legend()
         self.corsplot.set_facecolor('none')
         self.corfig.set_facecolor('none')
         self.corcan = FigureCanvas(self.corfig)
+
+        for child in self.corsplot.get_children():
+            if isinstance(child, matplotlib.spines.Spine):
+                child.set_color('#ffffff')
         self.corcan.draw()
 
         font = QtGui.QFont()
@@ -67,10 +77,7 @@ class StatPage(QWidget):
         if len(avgs)>0:
             self.l.setText("평균 분당 타수 : "+str(sum(avgs)//len(avgs))+"\n평균 정확도 : "+str(sum(cors)//len(cors))+"%")
         self.l.setFont(font)
-        self.l.setAlignment(Qt.AlignTop)
-        self.l.setAlignment(Qt.AlignVCenter)
         self.l.setStyleSheet("color : #ffffff")
-        self.l.setFixedWidth(200)
         self.avgcan.show()
 
     def constUI(self):
@@ -78,6 +85,9 @@ class StatPage(QWidget):
         self.rbutton = QPushButton("기록 삭제",self)
         self.rbutton.setToolTip('현재까지의 모든 기록을 삭제합니다.')
         self.rbutton.clicked.connect(self.onClick)
+        self.l.setAlignment(Qt.AlignHCenter)
+        self.l.setAlignment(Qt.AlignBottom)
+        self.l.setFixedWidth(300)
         self.grid.addWidget(self.rbutton,1,1)
         self.grid.addWidget(self.l,0,1)
 
