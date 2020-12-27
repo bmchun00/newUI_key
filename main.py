@@ -341,7 +341,7 @@ class Ui_MainWindow(QMainWindow):
         if changedInd in [1,2,3] and e.key() == Qt.Key_Return and tab.input.text() != '':
             if tab.progressNum == 0: #유예
                 tab.prevtime = time.time()
-                tab.Text.setText(tab.toList[tab.progressNum])
+                tab.Text.setText('<p style="text-align:center;">'+tab.toList[tab.progressNum]+'</p>')
                 tab.progressNum += 1
                 tab.input.setText('')
             else:
@@ -351,7 +351,6 @@ class Ui_MainWindow(QMainWindow):
                 tab.prevtime = time.time()
                 tab.userList.append(user)
                 tab.input.setText('')
-                tab.input.setAlignment(Qt.AlignCenter)
                 val = tab.progressBar.value()
                 tab.progressBar.setValue(val + 1)
                 tab.progressNum += 1
@@ -375,7 +374,7 @@ class Ui_MainWindow(QMainWindow):
                     tab.atList = []
                     tab.wrongList = []
                 else:
-                    tab.Text.setText(tab.toList[tab.progressNum-1])
+                    tab.Text.setText('<p style="text-align:center;">'+tab.toList[tab.progressNum-1]+'</p>')
 
 
 if __name__ == "__main__":

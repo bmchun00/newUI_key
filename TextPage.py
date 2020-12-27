@@ -99,6 +99,7 @@ class TextPage(QtWidgets.QWidget):
                                  "background-color:#ffffff;\n"
                                  "")
         self.input.setObjectName("input")
+        self.input.setAlignment(QtCore.Qt.AlignCenter)
         self.InputLayout.addWidget(self.input)
         self.confirm = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         font = QtGui.QFont()
