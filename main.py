@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 import time
 import os,glob
 from TextPage import TextPage
@@ -159,6 +159,7 @@ class Ui_MainWindow(QMainWindow):
         self.setupUi(self)
 
     def setupUi(self, MainWindow):
+        self.setWindowFlags(Qt.FramelessWindowHint)
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(750, 500)
         MainWindow.setAutoFillBackground(False)
@@ -290,11 +291,13 @@ class Ui_MainWindow(QMainWindow):
         wid.setStyleSheet(QSSDialog)
         num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.TextPage.toList))
         if ok:
+            self.TextPage.Text.setText('내장된 문장을 불러옵니다.<br>아무거나 입력해 시작합니다.')
             self.TextPage.progressBar.setMaximum(num)
             self.TextPage.progressBar.setValue(0)
             self.TextPage.progressNum = 0
             self.TextPage.maxNum = num
             self.stackWidget.setCurrentIndex(1)
+            self.TextPage.Text.setAlignment(Qt.AlignCenter)
         else:
             self.stackWidget.setCurrentIndex(0)
 
@@ -303,11 +306,13 @@ class Ui_MainWindow(QMainWindow):
         wid.setStyleSheet(QSSDialog)
         num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.NewsPage.toList))
         if ok:
+            self.NewsPage.Text.setText('랜덤 뉴스 기사를 불러옵니다.<br>아무거나 입력해 시작합니다.')
             self.NewsPage.progressBar.setMaximum(num)
             self.NewsPage.progressBar.setValue(0)
             self.NewsPage.progressNum = 0
             self.NewsPage.maxNum = num
             self.stackWidget.setCurrentIndex(2)
+            self.NewsPage.Text.setAlignment(Qt.AlignCenter)
         else:
             self.stackWidget.setCurrentIndex(0)
 
@@ -317,11 +322,13 @@ class Ui_MainWindow(QMainWindow):
         self.LyricsPage.toList = getLyrics(random.randint(1,50))
         num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.LyricsPage.toList))
         if ok:
+            self.LyricsPage.Text.setText('멜론의 top50 곡의 가사를 불러옵니다.<br>아무거나 입력해 시작합니다.')
             self.LyricsPage.progressBar.setMaximum(num)
             self.LyricsPage.progressBar.setValue(0)
             self.LyricsPage.progressNum = 0
             self.LyricsPage.maxNum = num
             self.stackWidget.setCurrentIndex(3)
+            self.LyricsPage.Text.setAlignment(Qt.AlignCenter)
         else:
             self.stackWidget.setCurrentIndex(0)
 
@@ -376,6 +383,13 @@ class Ui_MainWindow(QMainWindow):
                 else:
                     tab.Text.setText('<p style="text-align:center;">'+tab.toList[tab.progressNum-1]+'</p>')
 
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint(event.globalPos() - self.oldPos)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()
 
 if __name__ == "__main__":
     import sys
