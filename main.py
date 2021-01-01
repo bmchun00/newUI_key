@@ -296,19 +296,9 @@ class Ui_MainWindow(QMainWindow):
         self.stackWidget.setCurrentIndex(1)
 
     def NewsButtonClicked(self):
-        wid = QWidget()
-        wid.setStyleSheet(QSSDialog)
-        num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.NewsPage.toList))
-        if ok:
-            self.NewsPage.Text.setText('랜덤 뉴스 기사를 불러옵니다.<br>아무거나 입력해 시작합니다.')
-            self.NewsPage.progressBar.setMaximum(num)
-            self.NewsPage.progressBar.setValue(0)
-            self.NewsPage.progressNum = 0
-            self.NewsPage.maxNum = num
-            self.stackWidget.setCurrentIndex(2)
-            self.NewsPage.Text.setAlignment(Qt.AlignCenter)
-        else:
-            self.stackWidget.setCurrentIndex(0)
+        self.NewsPage.Texthide()
+        self.NewsPage.Listshow()
+        self.stackWidget.setCurrentIndex(2)
 
     def LyricsButtonClicked(self):
         self.LyricsPage.Texthide()
@@ -322,7 +312,6 @@ class Ui_MainWindow(QMainWindow):
             self.StatPage.initUI()
         except Exception as e:
             print(e)
-
 
     def keyPressEvent(self, e):
         changedInd = self.stackWidget.currentIndex()

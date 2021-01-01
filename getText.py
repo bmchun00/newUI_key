@@ -1,6 +1,7 @@
 import os, glob
 import requests
 from bs4 import BeautifulSoup
+import time
 
 def getInternalHead():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,18 +22,47 @@ def getInternal(num):
         todo.append(txtlist[j].replace("\n", ""))
     return todo
 
-def getNews():
+def getNews(url):
     headers = {"User-Agent": "Mozilla/5.0"}
-    url = 'https://news.naver.com/main/read.nhn?mode=LSD&mid=shm&sid1=102&oid=011&aid=0003845459'
+    response = requests.get(url,headers=headers)
+    output = []
+    soup = BeautifulSoup(response.content,"html.parser")
+    try:
+        soup.find('span', {'class': "end_photo_org"}).decompose()
+    except:
+        print('there is no span to decompose')
+    cont = soup.select("._article_body_contents")[0].get_text('\n')
+    res = cont.replace('\t',"")
+    res = res.split('\n')
+    for i in res:
+        if i == '' or '▶' in i or '.com' in i or i==' ':
+            continue
+        else:
+            p = i.strip()
+            tmp = p.split('다.')
+            if len(tmp) > 2:
+                for j in range(0,len(tmp)-1):
+                    output.append(tmp[j]+'다.')
+            else:
+                output.append(p)
+    return output
+
+def getNewsHead():
+    headers = {"User-Agent": "Mozilla/5.0"}
+    today = time.strftime('%Y%m%d',time.localtime(time.time()))
+    output = []
+    outurl = []
+    url = 'https://news.naver.com/main/list.nhn?mode=LSD&mid=sec&sid1=001&listType=title&date='+today
     response = requests.get(url,headers=headers)
     soup = BeautifulSoup(response.content,"html.parser")
-    cont = soup.select("._article_body_contents")[0].get_text()
-    cont = cont.replace("\n","")
-    cont = cont.replace("\t", "")
-    cont = cont.replace("\'", "")
-    cont = cont.replace("\\", "")
-    output = cont.split("다.")
-    return output[0:len(output)-1]
+    ul = soup.select(".type02")
+    for i in range(0,len(ul)):
+        tlist = ul[i].select('a')
+        writing = ul[i].select('.writing')
+        for j in range(0,len(tlist)):
+            output.append(tlist[j].get_text() + " | "+writing[j].get_text())
+            outurl.append(tlist[j]['href'])
+    return output, outurl
 
 def getLyricsHead():
     headers = {"User-Agent": "Mozilla/5.0"}

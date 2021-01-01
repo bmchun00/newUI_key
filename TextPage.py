@@ -280,8 +280,6 @@ class TextPage(QtWidgets.QWidget):
         self.progressBar.setObjectName("progressBar")
         self.TextMainLayout.addWidget(self.progressBar, 0, QtCore.Qt.AlignHCenter)
 
-        if type == 'news' :
-            self.toList = getNews()
     def Listshow(self):
         self.frame.show()
         self.List.show()
@@ -316,10 +314,11 @@ class TextPage(QtWidgets.QWidget):
         wid.setStyleSheet(QSSDialog)
         if self.type == 'internal':
             self.toList = getInternal(rnum)
+        if self.type == 'news':
+            self.toList = getNews(self.url[rnum])
+            print(self.toList)
         if self.type == 'lyrics' :
             self.toList = getLyrics(rnum)
-        print(self.type)
-        print(self.toList)
         num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.toList))
         if ok:
             self.Text.setText('아무거나 입력해 시작합니다.')
@@ -334,6 +333,11 @@ class TextPage(QtWidgets.QWidget):
     def additem(self,type):
         if type == 'internal':
             head = getInternalHead()
+            for i in range(0, len(head)):
+                self.List.addItem(head[i])
+
+        if type == 'news':
+            head, self.url = getNewsHead()
             for i in range(0, len(head)):
                 self.List.addItem(head[i])
 
