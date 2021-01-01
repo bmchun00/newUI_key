@@ -328,7 +328,8 @@ class TextPage(QtWidgets.QWidget):
             self.maxNum = num
             self.Text.setAlignment(QtCore.Qt.AlignCenter)
         else:
-            self.stackWidget.setCurrentIndex(0)
+            self.Texthide()
+            self.Listshow()
 
     def additem(self,type):
         if type == 'internal':
