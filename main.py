@@ -5,7 +5,7 @@ import time
 import os,glob
 from TextPage import TextPage
 from StatPage import StatPage
-from getText import getLyrics
+from getText import *
 import random
 import re
 
@@ -88,9 +88,13 @@ PyQT5 기반 타자연습 프로그램 <br>
 디자인을 대폭 수정했습니다. <br>
 Internal Text에서 내부 텍스트를 불러올 수 있습니다.<br>
 News에서 최신 랜덤 뉴스를 불러올 수 있습니다.<br>
-Lyrics에서 멜론 Top50 랜덤 곡의 가사를 불러올 수 있습니다.<br><br><br><br>
+Lyrics에서 멜론 Top50 랜덤 곡의 가사를 불러올 수 있습니다.<br>
++ 추가 : 이제 리스트 형태로 선택할 수 있습니다.
+<br><br><br>
 이쯤에 잡다한 링크 등 넣을 예정</p>
 '''
+
+
 
 def writeTxt(at, wrong):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -279,7 +283,7 @@ class Ui_MainWindow(QMainWindow):
         self.TextTitle.setText(_translate("MainWindow", "Internal Text"))
         self.NewsTitle.setText(_translate("MainWindow", "News"))
         self.LyricsTitle.setText(_translate("MainWindow", "Lyrics"))
-        self.MainTitle.setText(_translate("MainWindow", "KeyUI 0.5a"))
+        self.MainTitle.setText(_translate("MainWindow", "KeyUI 0.8a"))
         self.MainContent.setText(_translate("MainWindow", mainContent))
 
 
@@ -287,19 +291,9 @@ class Ui_MainWindow(QMainWindow):
         self.stackWidget.setCurrentIndex(0)
 
     def ITButtonClicked(self):
-        wid = QWidget()
-        wid.setStyleSheet(QSSDialog)
-        num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.TextPage.toList))
-        if ok:
-            self.TextPage.Text.setText('내장된 문장을 불러옵니다.<br>아무거나 입력해 시작합니다.')
-            self.TextPage.progressBar.setMaximum(num)
-            self.TextPage.progressBar.setValue(0)
-            self.TextPage.progressNum = 0
-            self.TextPage.maxNum = num
-            self.stackWidget.setCurrentIndex(1)
-            self.TextPage.Text.setAlignment(Qt.AlignCenter)
-        else:
-            self.stackWidget.setCurrentIndex(0)
+        self.TextPage.Texthide()
+        self.TextPage.Listshow()
+        self.stackWidget.setCurrentIndex(1)
 
     def NewsButtonClicked(self):
         wid = QWidget()
@@ -317,20 +311,9 @@ class Ui_MainWindow(QMainWindow):
             self.stackWidget.setCurrentIndex(0)
 
     def LyricsButtonClicked(self):
-        wid = QWidget()
-        wid.setStyleSheet(QSSDialog)
-        self.LyricsPage.toList = getLyrics(random.randint(1,50))
-        num, ok = QInputDialog.getInt(wid,'문장 수','<html style="font-size:12pt;font-family:''맑은 고딕'';color:''white'';">  문장 수를 입력해 주세요</html>', 1, 1, len(self.LyricsPage.toList))
-        if ok:
-            self.LyricsPage.Text.setText('멜론의 top50 곡의 가사를 불러옵니다.<br>아무거나 입력해 시작합니다.')
-            self.LyricsPage.progressBar.setMaximum(num)
-            self.LyricsPage.progressBar.setValue(0)
-            self.LyricsPage.progressNum = 0
-            self.LyricsPage.maxNum = num
-            self.stackWidget.setCurrentIndex(3)
-            self.LyricsPage.Text.setAlignment(Qt.AlignCenter)
-        else:
-            self.stackWidget.setCurrentIndex(0)
+        self.LyricsPage.Texthide()
+        self.LyricsPage.Listshow()
+        self.stackWidget.setCurrentIndex(3)
 
     def StatButtonClicked(self):
         self.stackWidget.setCurrentIndex(4)

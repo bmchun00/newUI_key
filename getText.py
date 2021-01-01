@@ -2,15 +2,23 @@ import os, glob
 import requests
 from bs4 import BeautifulSoup
 
-def getInternal(): #개선 필요
+def getInternalHead():
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    flist = glob.glob(BASE_DIR + '\internal\*.bmc')
+    output = []
+    for i in flist:
+        tmp = i.replace(BASE_DIR+'\\internal\\',"")
+        output.append(tmp.replace(".bmc",""))
+    return output
+
+def getInternal(num):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     flist = glob.glob(BASE_DIR+'\internal\*.bmc')
     todo = []
-    for i in flist:
-        tf = open(i,"rt",encoding='UTF-8')
-        txtlist = tf.readlines()
-        for j in range(0,len(txtlist)):
-            todo.append(txtlist[j].replace("\n", ""))
+    tf = open(flist[num],"rt",encoding='UTF-8')
+    txtlist = tf.readlines()
+    for j in range(0, len(txtlist)):
+        todo.append(txtlist[j].replace("\n", ""))
     return todo
 
 def getNews():
@@ -25,6 +33,24 @@ def getNews():
     cont = cont.replace("\\", "")
     output = cont.split("다.")
     return output[0:len(output)-1]
+
+def getLyricsHead():
+    headers = {"User-Agent": "Mozilla/5.0"}
+    output = []
+    #top num의 곡명과 가수명 수집
+    url = 'https://www.melon.com/chart/index.htm'
+    response = requests.get(url,headers=headers)
+    soup = BeautifulSoup(response.content,"html.parser")
+    titles = soup.select(".ellipsis.rank01")
+    singers = soup.select(".ellipsis.rank02")
+    for i in range(0,len(titles)):
+        tmp1 = titles[i].get_text()
+        tmp1 = tmp1.replace("\n","")
+        tmp2 = singers[i].get_text()
+        tmp2 = tmp2.replace("\n","")
+        tmp2 = tmp2[0:len(tmp2)//2]
+        output.append(tmp1+" - "+tmp2)
+    return output
 
 def getLyrics(num):
     headers = {"User-Agent": "Mozilla/5.0"}
