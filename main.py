@@ -264,7 +264,7 @@ class Ui_MainWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.mainButton.setText(_translate("MainWindow", "Main"))
-        self.ITButton.setText(_translate("MainWindow", "Internal Text"))
+        self.ITButton.setText(_translate("MainWindow", "Text"))
         self.newsButton.setText(_translate("MainWindow", "News"))
         self.lyricsButton.setText(_translate("MainWindow", "Lyrics"))
         self.statButton.setText(_translate("MainWindow", "Stat"))
@@ -317,8 +317,12 @@ class Ui_MainWindow(QMainWindow):
 
     def StatButtonClicked(self):
         self.stackWidget.setCurrentIndex(4)
-        self.StatPage.refresh()
-        self.StatPage.initUI()
+        try:
+            self.StatPage.refresh()
+            self.StatPage.initUI()
+        except Exception as e:
+            print(e)
+
 
     def keyPressEvent(self, e):
         changedInd = self.stackWidget.currentIndex()
@@ -376,6 +380,11 @@ class Ui_MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     import sys
+    try:
+        os.chdir(sys._MEIPASS)
+        print(sys._MEIPASS)
+    except:
+        os.chdir(os.getcwd())
     app = QtWidgets.QApplication(sys.argv)
     ui = Ui_MainWindow()
     ui.show()
